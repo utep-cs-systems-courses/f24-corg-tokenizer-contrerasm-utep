@@ -1,34 +1,31 @@
 #include <stdio.h>
 #include "tokenizer.h"
 #include "history.h"
-#include <string.h> //added for input
 
 int main() {
-  char input[100];// testing ****REMOVE ME******
+  char input[100];
   List *history = init_history();
   char **tokens = NULL;
  
   while (1) {
     printf("Please enter a phrase: \n");
-    // scanf("%s",input);
-    // printf("User input: %s\n",input);
-    fgets(input,100,stdin);
-    printf(input);
-    /**
-    printf("prior to add_history");//testing *****REMOVE ME******
+    if (scanf("%99[^\n]", input) != 1) {
+      fprintf(stderr, "Error with input.\n");
+      break;
+    }
+
     add_history(history, input);
-    printf("add_history success");//testing ****REMOVE ME*******
     tokens = tokenize(input);
-    printf("tokenize success");//testing *****REMOVE ME*****
-    
     if (tokens == NULL) {
       fprintf(stderr, "Tokenize failure.\n");
       continue;
     }
 
+    print_tokens(tokens);
+
     char option;
     printf("Type: h= history, p = to print tokens, q= quit, t=tokenize\n");
-    if (scanf(" %c", &option) != 1) {//user choice
+    if (scanf(" %c", &option) != 1) {
       fprintf(stderr, "Error reading option.\n");
       break;
     }
@@ -44,11 +41,9 @@ int main() {
     }else{
       printf("Invalid option,please try again");
     }
-  }//end of while
+  }
 
   free_tokens(tokens);
   free_history(history);
-    **/
-  }
   return 0;
 }

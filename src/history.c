@@ -28,7 +28,7 @@ void add_history(List *list, char *str){
   }
 
   newAdd->id =id;
-  newAdd->str = strdup(str);
+  newAdd->str = maloc(sizeof(;//add malloc for size, online test.
   newAdd->next =NULL;
 
   if(list->root==NULL){
