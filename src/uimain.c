@@ -2,53 +2,60 @@
 #include "tokenizer.h"
 #include "history.h"
 #include <string.h> //added for input
+#include <stdlib.h>
+
 
 int main() {
-  char input[100];// testing ****REMOVE ME******
-  List *history = init_history();
-  char **tokens = NULL;
- 
-  while (1) {
-    printf("Please enter a phrase: \n");
-    // scanf("%s",input);
-    // printf("User input: %s\n",input);
-    fgets(input,100,stdin);
-    printf(input);
-    /**
-    printf("prior to add_history");//testing *****REMOVE ME******
-    add_history(history, input);
-    printf("add_history success");//testing ****REMOVE ME*******
-    tokens = tokenize(input);
-    printf("tokenize success");//testing *****REMOVE ME*****
-    
-    if (tokens == NULL) {
-      fprintf(stderr, "Tokenize failure.\n");
-      continue;
-    }
 
-    char option;
-    printf("Type: h= history, p = to print tokens, q= quit, t=tokenize\n");
-    if (scanf(" %c", &option) != 1) {//user choice
-      fprintf(stderr, "Error reading option.\n");
+  char input[100];//input for strings
+  char choice;//users input
+  int id;//id for token
+  char *storage;//holds tokens
+  List *history=init_history();//start list
+
+  printf("Welcome\n");
+
+  while(1){
+    printf("\n Please select: t=tokenize strings, h=get history, g=get an item, q=quit\n");
+    scanf("\n%c",&choice);
+
+    switch(choice){
+    case 't':
+      printf("\n Enter a string: \n");
+      scanf(" %[^\n]",&input);
+      char **newTokens=tokenize(input);
+      printf("\n");
+      add_history(history,input);
+      print_tokens(newTokens);
+      free_tokens(newTokens);
       break;
-    }
-
-    if (option == 'h') {
+    case 'h':
       print_history(history);
-    } else if (option == 'p') {
-      print_tokens(tokens);
-    } else if (option == 'q') {
       break;
-    } else if (option =='t'){
-      continue;
-    }else{
-      printf("Invalid option,please try again");
-    }
-  }//end of while
+    case 'g':
+      printf("\nPlease choose based on id\n");
+      scanf("%d",&id);
 
-  free_tokens(tokens);
-  free_history(history);
-    **/
-  }
+      if(get_history(history,id) != NULL){
+	storage = get_history(history,id);
+      }
+      else{
+	break;
+      }
+      char **picked = tokenize(storage);
+      printf("\nSelected:\n");
+      print_tokens(picked);
+      break;
+
+    case 'q':
+      free_history(history);
+      printf("ending program");
+      return 0;
+    default:
+      printf("\nError,default hit");
+      
+    }//end of switch
+  }//end of while
   return 0;
-}
+}//end of main
+

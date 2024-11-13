@@ -10,33 +10,36 @@ List *init_history(){
   return lst;
 }
 
+
 void add_history(List *list, char *str){
-  if(list == NULL || str == NULL){
-    return;
-  }
-  Item *newAdd =malloc(sizeof(Item));
-  if(newAdd==NULL){
-    printf("memory failure");
-    return;
-  }
+  if(list==NULL || str==NULL){
+    return; }
 
-  int id =0;
-  Item *cur = list->root;
-  while (cur !=NULL){
-    id++;
-    cur = cur->next;
-  }
+  Item *newItem =(Item*)malloc(sizeof(Item));
+  if(newItem==NULL){
+    return; }
+  newItem->str=strdup(str);
+  if(newItem->str==NULL){
+    free(newItem);
+    return; }
 
-  newAdd->id =id;
-  newAdd->str = maloc(sizeof(;//add malloc for size, online test.
-  newAdd->next =NULL;
+  newItem->next=NULL;
 
   if(list->root==NULL){
-    list->root=newAdd;
+    newItem->id=1;
+    list->root = newItem;
     return;
   }
- 
-}//end of add_history
+
+  Item *cur = list->root;
+  while(cur->next !=NULL){
+    cur=cur->next;
+  }
+  newItem->id= cur->id+1;
+  cur->next=newItem;
+
+}//end of add history
+  
 
 char *get_history(List *list, int id){
   Item *cur=list->root;
@@ -46,30 +49,34 @@ char *get_history(List *list, int id){
    if(cur->id==id){
     return cur->str;}
    cur=cur->next;}
-  return "Error in get history";}//end of get history
+  return "Invalid Index";
+}//end of get history
  
 void print_history(List *list){
-  if(list ==NULL){
+  if(list->root ==NULL|| list==NULL){
     printf("List is empty\n");
   }
+  printf("History: \n");
   
   Item *cur = list->root;
-  if(cur==NULL){
-   printf("Nothing available to print\n");
-   return;
-  }
-  printf("All input so far: \n");
+
    while(cur!=NULL){
-     printf("%d: %s\n",cur->id, cur->str);
-     cur=cur->next;
+     if(cur->str !=NULL){
+       printf("id: %d - input: %s\n",cur->id, cur->str);
+       cur = cur->next;
+     }
+     else{
+       printf("id: %d - input: NULL\n",cur->id);
+     }
    }
 }//end of print_history
 
 void free_history(List *list){
-  if(list ==NULL){
-    return;
+  Item *trash = list->root;
+  while(trash !=NULL){
+    free(list->root);
+    trash=trash->next;
+    list->root=list->root->next;
   }
-  else{
-    free(list);
-  }
+  free(list);
 }//end of free_history

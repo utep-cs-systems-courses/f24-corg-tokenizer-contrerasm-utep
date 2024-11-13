@@ -10,60 +10,62 @@
   }//end of space_char
   
   int non_space_char(char c){//returns true if character is not a white space character
-    if(space_char(c)){
-      return 0;}
-    else{
-      return 1;}
+    return !space_char(c);
+    
   }//end of non_space_char
   
   char *token_start(char *tkn){
-    if(*tkn =='\0'){
-      return 0;}//rerturn 0 if string doesnt contain tokens
-    while(space_char(*tkn)){
+    if(tkn==NULL||*tkn =='\0'){
+      return NULL;}//rerturn 0 if string doesnt contain tokens
+    while(*tkn!='\0'&& space_char(*tkn)){
       tkn++;}
-    return tkn;
+    return (*tkn=='\0') ?NULL :tkn;
   }//end of token_start
   
   int count_tokens(char *tkn){
-    int num_tokens=0;
-    while(*tkn !='\0'){//add token_start
-      tkn = token_start(tkn);
-      tkn = token_terminator(tkn);
-      num_tokens++;
+    int count =0;
+    char *start =tkn;
+
+    if(tkn==NULL){
+      return 0;
     }
-	return num_tokens;
+    while((start =token_start(start)) != NULL){
+      count ++;
+      start= token_terminator(start);
+    }
+    return count;
   }//end of count_tokens
   
   char *token_terminator(char *tkn){
-    while(non_space_char(*tkn)){
+    while(*tkn != '\0' && non_space_char(*tkn)){
       tkn++;}
     return tkn;
   }//end of token_terminator
 
   char *copy_str(char *intStr, short len){
-    char *str_cpy= malloc((len+1) * sizeof(char));
-    int i;
-    for(i=0;i<len;i++){
-      str_cpy[i] = intStr[i];
+    char *copy = malloc((len+1)*sizeof(char));
+
+    for (int i=0; i<len;i++){
+      copy[i]= intStr[i];
     }
-    str_cpy[i] ='\0';
-    return str_cpy;
+    copy[len]='\0';
+    return copy;
   }//end of copy str
   
   char **tokenize(char *str){
-    char **tokVec, **tvp;
-    int numTokens = count_tokens(str);
-    tokVec = (char**)calloc(numTokens+1,sizeof(char *));//allocate memory +1 for terminal symbol
-    char *start=token_start(str);
-    while(start){
-      char *end = token_terminator(start);
-      char *tokCopy = copy_str(str,numTokens);
-      *tvp=tokCopy;
-      tvp++;
-      start=token_start(end);
+    int total = count_tokens(str);
+    char *token = str;
+    char **tokens = malloc(sizeof(char*) * (total+1));
+
+    for( int i=0; i<total;i++){
+      token=token_start(token);
+      char *tokEnd= token_terminator(token);
+      int len = tokEnd-token;
+      tokens[i]=copy_str(token,len);
+      token=tokEnd;
     }
-    *tvp = 0;
-    return tokVec;
+    tokens[total]='\0';
+    return tokens;
   }//end of tokenize
   
   void print_tokens(char **tokens){
