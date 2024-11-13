@@ -16,7 +16,7 @@
   
   char *token_start(char *tkn){
     if(tkn==NULL||*tkn =='\0'){
-      return NULL;}//rerturn 0 if string doesnt contain tokens
+      return NULL;}
     while(*tkn!='\0'&& space_char(*tkn)){
       tkn++;}
     return (*tkn=='\0') ?NULL :tkn;
@@ -43,11 +43,12 @@
   }//end of token_terminator
 
   char *copy_str(char *intStr, short len){
-    char *copy = malloc((len+1)*sizeof(char));
+    char *copy = malloc((len+1)*sizeof(char));//allocate memory
 
     for (int i=0; i<len;i++){
-      copy[i]= intStr[i];
+      copy[i]= intStr[i];/
     }
+    
     copy[len]='\0';
     return copy;
   }//end of copy str
@@ -58,12 +59,14 @@
     char **tokens = malloc(sizeof(char*) * (total+1));
 
     for( int i=0; i<total;i++){
+      
       token=token_start(token);
       char *tokEnd= token_terminator(token);
       int len = tokEnd-token;
       tokens[i]=copy_str(token,len);
       token=tokEnd;
     }
+    
     tokens[total]='\0';
     return tokens;
   }//end of tokenize
